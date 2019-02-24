@@ -1,0 +1,18 @@
+@startuml
+
+Doctor -> Patient : getCommonSymptoms(patient : Patient)
+activate Patient
+    Patient -> Patient : makeAnalysis()
+    return CommonSymptom
+
+Doctor -> Patient : getPrivateSymptoms(patient : Patient)
+
+loop all elements in list
+    Patient -> PrivateSymptoms : whatIFeel()
+    PrivateSymptoms -> Patient : PrivateSymptom
+end
+Patient -> Doctor : ArrayList<PrivateSymptom>
+
+Doctor -> DiseaseCatalog : getDisease(parameters : CommonSymptom, symptoms : ArrayList<PrivateSymptoms>)
+
+@enduml

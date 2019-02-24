@@ -1,0 +1,77 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+abstract class User{
+-id : int
+-name : String
+}
+
+class Doctor {
+-speciality : String
++getCommonSymptoms(patient : Patient) : CommonSymptom
++getPrivateSymptoms(patient : Patient) : ArrayList<PrivateSymptoms>
+}
+
+class Patient{
+-patientGroup : String
+-commonSymptoms : CommonSymptom
+-privateSymptoms: ArrayList<PrivateSymptom>
++makeAnalysis() : CommonSymptom
++whatIFeel() : ArrayList<PrivateSymptom>
+}
+note left: Пациент сдает анализы, описывает симптомы и может сам сделать запрос справочнику
+
+Patient "0..*" <--> "1" Doctor
+
+interface Query{
++getDisease(parameters : CommonSymptom, symptoms : ArrayList<PrivateSymptoms>) : Disease
+}
+
+interface ManageCatalog{
++addDisease(name: String, parameters : CommonSymptom, symptoms : ArrayList<PrivateSymptoms>)
++deleteDisease(name : String)
+}
+
+Query <|.. User
+ManageCatalog <|.. Doctor
+User <|-- Doctor
+User <|-- Patient
+
+class DiseaseCatalog {
+-diseases : ArrayList<Diseases>
++findDisease(parameters : CommonSymptom, symptoms : ArrayList<PrivateSymptom>) : ArrayList<Disease>
++addDisease(parameters : CommonSymptom, symptoms : ArrayList<PrivateSymptom>)
++deleteDisease(name : String)
+}
+
+class Disease{
+-commonSymptoms : CommonSymptom
+-symptoms : ArrayList<PrivateSymptom>
+}
+
+abstract class Symptom{
+-String name
+}
+
+class CommonSymptom{
+-temp: float
+-redBloodCells : float
+-whiteBloodCells : float
+-sugar : float
+-salt : float
+}
+
+class PrivateSymptom{
+-info : String
+}
+
+Symptom <|-- CommonSymptom
+Symptom <|-- PrivateSymptom
+
+Disease "1" <--> "1..*" CommonSymptom
+Disease "1" <--> "1..*" PrivateSymptom
+DiseaseCatalog "1" <--> "1..*" Disease
+DiseaseCatalog "1" <--> "1..*" ManageCatalog
+DiseaseCatalog "1" <--> "1..*" Query
+
+@enduml
