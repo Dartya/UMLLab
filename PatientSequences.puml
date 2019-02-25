@@ -8,11 +8,9 @@ activate Patient
 Doctor -> Patient : getPrivateSymptoms(patient : Patient)
 
 loop all elements in list
-    Patient -> PrivateSymptoms : whatIFeel()
-    PrivateSymptoms -> Patient : PrivateSymptom
+    Patient -> privateSymptoms : whatIFeel()
+    privateSymptoms -> Patient : PrivateSymptom
 end
 Patient -> Doctor : ArrayList<PrivateSymptom>
-
-Doctor -> DiseaseCatalog : getDisease(parameters : CommonSymptom, symptoms : ArrayList<PrivateSymptoms>)
 
 @enduml

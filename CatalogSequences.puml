@@ -1,0 +1,29 @@
+@startuml
+
+Doctor -> DiseaseCatalog : getDisease(parameters : CommonSymptom, symptoms : ArrayList<PrivateSymptoms>)
+loop all elements in list
+    DiseaseCatalog -> diseases : findDisease(parameters : CommonSymptom, symptoms : ArrayList<PrivateSymptom>)
+    diseases -> DiseaseCatalog : currentDisease : Disease
+    alt (parameters > diseases.minCommonSymptoms) && (parameters < diseases.maxCommonSymptoms)
+       loop all relevant diseases
+            alt symptoms.name == currentDisease.privateSymptoms.name
+                DiseaseCatalog -> DiseaseCatalog : currentDiseasesList.add(currentDisease)
+            end
+       end
+       else No matches
+            DiseaseCatalog -> Doctor : null
+    end
+end
+DiseaseCatalog -> Doctor : currentDiseasesList : ArrayList<Disease>
+
+Doctor -> DiseaseCatalog : addDisease(name : String, parameters : CommonSymptom, symptoms : ArrayList<PrivateSymptoms>)
+DiseaseCatalog -> diseases : addDisease(name : String, parameters : CommonSymptom, symptoms : ArrayList<PrivateSymptoms>)
+
+Doctor -> DiseaseCatalog : deleteDisease(name : String)
+loop all elements in list
+    DiseaseCatalog -> diseases : deleteDisease(name : String)
+
+end
+
+
+@enduml

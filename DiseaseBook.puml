@@ -19,7 +19,7 @@ class Patient{
 +makeAnalysis() : CommonSymptom
 +whatIFeel() : ArrayList<PrivateSymptom>
 }
-note left: Пациент сдает анализы, описывает симптомы и может сам сделать запрос справочнику
+note left: Пациент сдает анализы, \nописывает симптомы \nи может сам сделать запрос \nсправочнику
 
 Patient "0..*" <--> "1" Doctor
 
@@ -46,6 +46,8 @@ class DiseaseCatalog {
 
 class Disease{
 -commonSymptoms : CommonSymptom
+-minCommonSymptoms : CommonSymptom
+-maxCommonSymptoms : CommonSymptom
 -symptoms : ArrayList<PrivateSymptom>
 }
 
