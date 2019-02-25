@@ -22,8 +22,10 @@ DiseaseCatalog -> diseases : addDisease(name : String, parameters : CommonSympto
 Doctor -> DiseaseCatalog : deleteDisease(name : String)
 loop all elements in list
     DiseaseCatalog -> diseases : deleteDisease(name : String)
-
 end
 
+Doctor -> DiseaseCatalog : getDisease(name : String)
+DiseaseCatalog -> diseases : findDisease(name : String)
+diseases -> Doctor : Disease
 
 @enduml

@@ -2,35 +2,39 @@
 skinparam classAttributeIconSize 0
 
 abstract class User{
--id : int
--name : String
+    -id : int
+    -name : String
 }
+note left: Есть два класса пользователей: \nпациент и доктор, они оба могут\nзапросить данные из каталога\nболезней, реализуя интерфейс\nQuery
 
 class Doctor {
--speciality : String
-+getCommonSymptoms(patient : Patient) : CommonSymptom
-+getPrivateSymptoms(patient : Patient) : ArrayList<PrivateSymptoms>
+    -speciality : String
+    +getCommonSymptoms(patient : Patient) : CommonSymptom
+    +getPrivateSymptoms(patient : Patient) : ArrayList<PrivateSymptoms>
 }
+note right: Доктор обследует пациента, чтобы узнать его симптомы
 
 class Patient{
--patientGroup : String
--commonSymptoms : CommonSymptom
--privateSymptoms: ArrayList<PrivateSymptom>
-+makeAnalysis() : CommonSymptom
-+whatIFeel() : ArrayList<PrivateSymptom>
+    -patientGroup : String
+    -commonSymptoms : CommonSymptom
+    -privateSymptoms: ArrayList<PrivateSymptom>
+    +makeAnalysis() : CommonSymptom
+    +whatIFeel() : ArrayList<PrivateSymptom>
 }
 note left: Пациент сдает анализы, \nописывает симптомы \nи может сам сделать запрос \nсправочнику
 
 Patient "0..*" <--> "1" Doctor
 
 interface Query{
-+getDisease(parameters : CommonSymptom, symptoms : ArrayList<PrivateSymptoms>) : Disease
+    +getDisease(parameters : CommonSymptom, symptoms : ArrayList<PrivateSymptoms>) : ArrayList<Disease>
+    +getDisease(name: String) : Disease
 }
 
 interface ManageCatalog{
-+addDisease(name: String, parameters : CommonSymptom, symptoms : ArrayList<PrivateSymptoms>)
-+deleteDisease(name : String)
+    +addDisease(name: String, parameters : CommonSymptom, symptoms : ArrayList<PrivateSymptoms>)
+    +deleteDisease(name : String)
 }
+note bottom: Каталог можно администрировать:\nдобавлять и удалять из него болезни;\n\этот интерфейс реализует только доктор
 
 Query <|.. User
 ManageCatalog <|.. Doctor
@@ -38,34 +42,40 @@ User <|-- Doctor
 User <|-- Patient
 
 class DiseaseCatalog {
--diseases : ArrayList<Diseases>
-+findDisease(parameters : CommonSymptom, symptoms : ArrayList<PrivateSymptom>) : ArrayList<Disease>
-+addDisease(parameters : CommonSymptom, symptoms : ArrayList<PrivateSymptom>)
-+deleteDisease(name : String)
+    -diseases : HashMap<String, Disease>
+    +findDisease(name: String) : Disease
+    +findDisease(parameters : CommonSymptom, symptoms : ArrayList<PrivateSymptom>) : ArrayList<Disease>
+    +addDisease(name : String, parameters : CommonSymptom, symptoms : ArrayList<PrivateSymptom>)
+    +deleteDisease(name : String)
 }
+note right: Каталог позволяет найти болезнь по симптомам или названию,\nдобавить болезнь с соответствующими симптомами в каталог\nи удалить из него болезнь\nв качестве контейнера для хранения болезней используется\nHashMap<String, Disease>, используя название болезни\nи соответствующий класс
 
 class Disease{
--commonSymptoms : CommonSymptom
--minCommonSymptoms : CommonSymptom
--maxCommonSymptoms : CommonSymptom
--symptoms : ArrayList<PrivateSymptom>
+    -commonSymptoms : CommonSymptom
+    -minCommonSymptoms : CommonSymptom
+    -maxCommonSymptoms : CommonSymptom
+    -symptoms : ArrayList<PrivateSymptom>
 }
+note left: класс болезнь. содержит три типа общих параметрических\nсимптомов: минимальные, максимальные, общие;\nа также лист персональных симптомов, характерных\nдля данной болезни
 
 abstract class Symptom{
--String name
+    -String name
 }
+note right: абстрактный класс симптом,\nсимптомы бывают двух типов
 
 class CommonSymptom{
--temp: float
--redBloodCells : float
--whiteBloodCells : float
--sugar : float
--salt : float
+    -temp: float
+    -redBloodCells : float
+    -whiteBloodCells : float
+    -sugar : float
+    -salt : float
 }
+note right: общие симптомы - класс, хранящий\nпараметрические симптомы: температуру тела,\nэритроциты, лейкоциты, сахар, соль
 
 class PrivateSymptom{
--info : String
+    -info : String
 }
+note left: класс персональных симптомов: у него есть имя,\nунаследованное от абстрактного класса, и\nинформация о нем. Например, сыпь красная:\nдиаметр от 0,1 до 0,5см
 
 Symptom <|-- CommonSymptom
 Symptom <|-- PrivateSymptom
